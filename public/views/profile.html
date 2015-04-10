@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html><head><!-- views/profile.ejs --><title>Node Authentication</title><!--
+ <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
+<script type="text/javascript" src="/js/headListCDN.js"></script>  
+   -->
+  
+
+  <!-- default template -->
+  <script id="default_readDirectory" type="text/x-dot-template">
+	{{~ it.farray :k}}
+	<div class='iconstyle m{{=k.type}} context-menu-one box menu-1 icon{{=k.extension}}' id='{{=k.filename}}'>
+		<div class='icontext'>{{=k.basename}}</div>
+	</div>
+	{{~}}
+  </script>
+  
+  <script type="text/javascript" src="/lib/head.min.js"></script>
+  <script type="text/javascript" src="/js/headList.js"></script>
+  
+  <style>
+body {
+  padding-top: 80px;
+}
+#DirectoryLayer {
+  width: 70%;
+  background-color: #cccccc;
+  float: left;
+}
+#pathLayer {
+  background-color: #999999;
+}
+#iconLayer {
+  background-color: #666666;
+}
+#upLoadLayer {
+	background-color: #3366ff;
+	width: 30%; 	
+	float: right
+}
+
+</style>
+  
+  <script language="javascript">
+head.js(cssList);			
+head.js(jsList);
+head.ready(function() {
+	$(document).ready(function(){
+		var ID='<%= user._id %>';
+		createRepository(ID);
+		$("#upLoadLayer").hide();
+		$("#DirectoryLayer").hide();
+			
+	}); //end document ready jquery
+}); //end header ready
+
+  </script></head><body>
+<div id="mainLayer">
+	<img style="width: 64px; height: 64px;" alt="ShowFolder" src="../img/folder.png" id="ShowDirectory">
+</div>
+
+<div id="DirectoryLayer">
+	<div id="iconLayer"> 
+		<img style="width: 64px; height: 64px;" alt="home" src="../img/home.png" id="goHome"> 
+		<img style="width: 64px; height: 64px;" alt="Change Style" src="../img/list.png" id="mStyle">
+	</div>
+	<div id="pathLayer">racine</div>
+	<div id="listFileLayer" style="overflow: scroll; width: 100%; height: 300px;"></div>
+	
+</div>
+
+</body></html>
