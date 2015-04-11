@@ -5,6 +5,9 @@ wfBrowser(webFileBrowser) is a website base on node and express, which help to b
 ### Version
 0.0.1
 
+### screenshot
+![alt tag](./screenshot.png)
+
 ### Tech
 
 wfBrowser uses a number of open source projects to work properly:
