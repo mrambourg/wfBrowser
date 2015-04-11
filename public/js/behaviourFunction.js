@@ -1,27 +1,29 @@
 /************** BEHAVIOR *****************/
-// behavior of ShowDirectory
-$(document).on('click','#ShowDirectory',function(objEvent){
+$(document).on('click','.js-click_ShowDirectory',function(objEvent){
+	sessionStorage.setItem('currentDir','/Data');
 	$("#DirectoryLayer").slideToggle();
 	readDirectory();
 }); //end show directory
 
 // behavior of ShowDirectory
-$(document).on('click','#goHome',function(objEvent){
-	sessionStorage.setItem('currentDir',"/Data");
+$(document).on('click','.js-click_btgoHome',function(objEvent){
+	sessionStorage.setItem('currentDir','/Data');
 	readDirectory();
 }); //end show directory
 
 // behavior of change style
-$(document).on('click','#mStyle',function(objEvent){changeStyle();}); //end show directory			
-
-// UpLoad layer is hide by default 
-$(document).on('click','#uploadMe',function(objEvent){$("#upLoadLayer").slideToggle();});
+$(document).on('click','.js-click_btchgStyle',function(objEvent){changeStyle();}); //end show directory			
 
 // browse throw directory
-$(document).on('click','.mDirectory',function(objEvent){
+$(document).on('click','.js-click_Directory',function(objEvent){
 	sessionStorage.setItem('currentDir',this.id);
 	readDirectory();
 });
+
+
+
+// UpLoad layer is hide by default 
+$(document).on('click','#uploadMe',function(objEvent){$("#upLoadLayer").slideToggle();});
 
 $(document).on('submit','#uploadForm',function(objEvent){
 	objEvent.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
