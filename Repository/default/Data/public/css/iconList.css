@@ -1,0 +1,36 @@
+.iconstyle{
+  margin: 10px;
+}
+
+.icontext {
+position: absolute;
+padding: 70px 15px 0px 15px;
+text-align: center;
+}
+
+.iconstyle32{
+  background-color: #00ff00;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+  background-position: 0 40%;
+  padding: 10px 0px 10px 35px;
+  margin: 5px;
+}
+
+.icontext32{
+	  text-align: left;
+}
+
+.iconpdf		{background-image: url('../img/MIME/icon_pdf_256.png');}
+.iconpng		{background-image: url('../img/MIME/icon_png_256.png');}
+.icondoc		{background-image: url('../img/MIME/icon_doc_256.png');}
+.iconrtf			{background-image: url('../img/MIME/icon_rtf_256.png');}
+.icontxt		{background-image: url('../img/MIME/icon_txt_256.png');}
+.iconcss		{background-image: url('../img/MIME/icon_css_256.png');}
+.iconhtml		{background-image: url('../img/MIME/icon_html_256.png');}
+.iconjs 			{background-image: url('../img/MIME/icon_js_256.png');}
+.iconDirectory{background-image: url('../img/MIME/folder.png');}
+.iconFile		{background-image: url('../img/MIME//icon_blanc_256.png');}
+.icondefault	{background-image: url('../img/MIME/icon_blanc_256.png');}
+.btReturn  	{background-image: url('../img/MIME/icon_Return_256.png');}
+

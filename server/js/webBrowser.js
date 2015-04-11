@@ -17,7 +17,7 @@ var sreadDirectory=function (req,res){
 	/* filter data from entrance */
 	var mydir= fi_readDirectory(req);
 	console.log("mydir " +mydir);
-	var homedir=path.normalize( __dirname + '../../../Repository/'+req.body.id);
+	var homedir=path.normalize( __dirname + '../../../Repository/'+req.body.id+'/Data');
 		
 	/* walk throw the directory */
 	fInfo.walk(mydir,1,function(err, results){
@@ -61,7 +61,7 @@ var sreadDirectory=function (req,res){
 function fi_readDirectory(req){
 	/* if directory not defined */
 	
-	var homedir=path.normalize( __dirname + '../../../Repository/'+req.body.id);
+	var homedir=path.normalize( __dirname + '../../../Repository/'+req.body.id+"/Data");
 	var currentdir=path.normalize( homedir+"/"+req.body.directory);
 	
 	var homeSplit=homedir.split("/");
