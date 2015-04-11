@@ -14,6 +14,7 @@
 	"connect-flash" : "~0.1.1", 	
 	"bcrypt-nodejs" : "latest",
 	"underscore" : "latest",
+	"ncp":"latest",
 	"path" : "latest",
 	"moment": "latest"	
   }

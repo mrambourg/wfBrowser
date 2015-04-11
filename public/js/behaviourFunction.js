@@ -7,7 +7,7 @@ $(document).on('click','#ShowDirectory',function(objEvent){
 
 // behavior of ShowDirectory
 $(document).on('click','#goHome',function(objEvent){
-	sessionStorage.setItem('currentDir',"");
+	sessionStorage.setItem('currentDir',"/Data");
 	readDirectory();
 }); //end show directory
 

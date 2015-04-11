@@ -1,7 +1,9 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require("underscore");
-var formidable = require('formidable'); // upload
+var ncp = require('ncp').ncp;
+
+var formidable = require('formidable'); //upload
 
 var lg=require('./log.js');
 var fInfo=require('./fileLibrary.js');
@@ -60,10 +62,7 @@ function fi_readDirectory(req){
 	/* if directory not defined */
 	
 	var homedir=path.normalize( __dirname + '../../../Repository/'+req.body.id);
-	console.log("homedir "+homedir);
-	
-	var currentdir=path.normalize( __dirname + '../../../Repository/'+req.body.id+"/"+req.body.directory);
-	console.log("currentdir "+currentdir);
+	var currentdir=path.normalize( homedir+"/"+req.body.directory);
 	
 	var homeSplit=homedir.split("/");
 	var currentSplit=currentdir.split("/");
@@ -98,15 +97,21 @@ var fo_readDirectory=function(mRes,homedir){
 /**************** CREATE Repository ****************/
 function screateRepository(req, res){
 	console.log("test "+JSON.stringify(req.body));
-	var mId=req.body.id;
-	var res=res;
-	var dirname=fs.realpath(__dirname+'/../../Repository/'+mId,function (err, resolvedPath) {
+	var dirM=path.normalize(__dirname+'/../../Repository/'+req.body.id);
+	var dirname=fs.realpath(dirM,function (err, resolvedPath) {
 		if (err) {
-		//repository doesn't exist we create it	
-		fs.mkdir(__dirname+'/../../Repository/'+mId,function(){
-		//!!!!!!!!!!!!!!!!!!! Copy default directory !!!!
-			console.log("Repository created");
-			res.json({msg:"Repository created"});
+			//repository doesn't exist we create it	
+			fs.mkdir(dirM,function(){
+			//copy default directory
+				ncp.limit = 16;
+				var source=path.normalize(__dirname+'/../../Repository/default');
+				ncp(source, dirM, function (err) {
+					if (err) {
+						return console.error(err);
+					}
+					console.log("Repository created");
+					res.json({msg:"Repository created"});
+				});//end ncp
 			});//end fs.mkdir
 		} else {
 			console.log("Repository still exist");
