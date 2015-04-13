@@ -6,6 +6,7 @@
 position: absolute;
 padding: 70px 15px 0px 15px;
 text-align: center;
+margin-left: -10px;
 }
 
 .iconstyle32{
@@ -21,6 +22,7 @@ text-align: center;
 	  text-align: left;
 }
 
+.icon				{background-image: url('../img/MIME//icon_blanc_256.png');}
 .iconpdf		{background-image: url('../img/MIME/icon_pdf_256.png');}
 .iconpng		{background-image: url('../img/MIME/icon_png_256.png');}
 .icondoc		{background-image: url('../img/MIME/icon_doc_256.png');}

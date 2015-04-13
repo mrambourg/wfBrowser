@@ -1,20 +1,85 @@
-/***********	FUNCTION 	AJAX	*************/
+/***********	GLOBAL FUNCTION 	*************/
+/***********	FUNCTION ERROR	*************/
+	// function to catch error 
+	var mlog=function(err){
+		console.log("Erreur "+JSON.stringify(err));
+	}
+	
+/***********	FUNCTION RENDER	*************/	
+	var render=function(templateName,targetLayer,mData){
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! test si tpl_readDirectory est defini
+	// si pas on va chercher le template par ajax
+	//si pas de template ajax, on prend le default template
+	/*************** template drawing *****************/
+		//get template string
+		var tpl_readDirectory=$('#'+templateName).text();
+		// create template engine
+		var pagefn = doT.template(tpl_readDirectory);
+		// resultText=template + data
+		var resultText = pagefn({farray: mData});
+		// draw result in targetLayer
+		$('#'+targetLayer).html(resultText);			
+	}
+	
+/***********	FUNCTION AJAX	*************/
 	var myAjax=function (mUrl,mObject,cbSuccess,cbError,mType){
 		/* define default value */
-		if( typeof(cbSuccess) == 'undefined' )	{var cbSuccess=	function(res){console.log("Success "+JSON.stringify(res))}}		
-		if( typeof(cbError) == 'undefined' )	{var cbError=	function(err){console.log("Erreur "+JSON.stringify(err))}}			
-		if( typeof(type) == 'undefined' )		{var mType=	"post"}			
-		
-		/* function ajax de jquery*/
+		if( typeof(cbSuccess) == 'undefined' )	{var cbSuccess=	function(res){console.log("Success "+JSON.stringify(res))}};	
+		if( typeof(cbError) == 'undefined' )	{var cbError=	function(err){mlog(err);}};			
+		if( typeof(type) == 'undefined' )		{var mType=	"POST"};		
+	/* function ajax de jquery*/
 		$.ajax({
       			url: 			mUrl,
       			type: 		mType,
-      			dataType: 	"json",
+      			dataType: 	"JSON",
       			data: 		mObject,
       			error: 		function(err)		{cbError(err);},
       			success: 		function(strData)	{cbSuccess(strData);}
       		});/* end ajax */
-	}/*  end myAjax */
+	}/*  end myAjax *
+
+
+/***********	FILE FUNCTION 	*************/
+/***********  	FUNCTION  CREATE REPOSITORY	 *************/	
+	var createRepository=function(ID){
+		//create repository if did not exist
+		myAjax('/createRepository',{id: ID}, function(){
+			// set global information
+			sessionStorage.setItem("currentDir","");
+			sessionStorage.setItem("ID",ID);
+		});//end myAjax
+	}//end readDirectory	
+	
+
+/***********  	FUNCTION  READDIRECTORY	 *************/	
+	var readDirectory=function(){
+	// read a directory and render the result
+		var dir= sessionStorage.getItem("currentDir");
+		var mObj={
+			id:sessionStorage.getItem("ID"),
+			directory: dir
+		};
+		//console.log("localDir "+ sessionStorage.getItem("currentDir"));
+		myAjax("/readDirectory",mObj,function(res){
+			//render the result
+			render('default_readDirectory','listFileLayer',res);
+			//modifie path location
+			$('#pathLayer').text(dir);
+		});//end my ajax		
+	}//end readDirectory
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 /***********	FUNCTION  LOAD TEMPLATE	*************/	
 	var loadTemplate = function (name){
@@ -54,42 +119,11 @@
 	}//end loadAllTemplate
 	
 
-/***********  	FUNCTION  READDIRECTORY	 *************/	
-	var readDirectory=function(){
-		var dir= sessionStorage.getItem("currentDir");
-		var mObj={
-			id:sessionStorage.getItem("ID"),
-			directory: dir
-		};
-		//console.log("localDir "+ sessionStorage.getItem("currentDir"));
-		myAjax("/readDirectory",mObj,function(res){
-			//console.log("reussite "+JSON.stringify(res));
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! test si tpl_readDirectory est defini
-			// si pas on va chercher le template par ajax
-			//si pas de template ajax, on prend le default template
-			/*************** template drawing *****************/
-			render('default_readDirectory','listFileLayer',res);
-			$('#pathLayer').text(dir);
-		});//end my ajax		
-	}//end readDirectory
 
 
-/***********  	FUNCTION  CREATE REPOSITORY	 *************/	
-	var createRepository=function(ID){
-		//create repository if did not exist
-		myAjax('/createRepository',{id: ID}, function(){
-			// set global information
-			sessionStorage.setItem("currentDir","");
-			sessionStorage.setItem("ID",ID);
-			$("#DirectoryLayer").hide();
-		});//end myAjax
-	}//end readDirectory
+
+
 	
 	
-	var render=function(templateName,targetLayer,mData){
-		var tpl_readDirectory=$('#'+templateName).text();
-		var pagefn = doT.template(tpl_readDirectory);
-		var resultText = pagefn({farray: mData});
-		$('#'+targetLayer).html(resultText);			
-	}
+
 	

@@ -4,19 +4,19 @@
 body {
   padding-top: 80px;
 }
-#DirectoryLayer {
+.directoryLayer {
   width: 70%;
   background-color: #cccccc;
   clear: both;
 }
-#pathLayer {
+.pathLayer {
   clear: both;
   background-color: #999999;
 }
-#iconLayer {
+.iconLayer {
   background-color: #666666;
 }
-#upLoadLayer {
+.upLoadLayer {
 	background-color: #3366ff;
 	width: 30%; 	
 	float: right

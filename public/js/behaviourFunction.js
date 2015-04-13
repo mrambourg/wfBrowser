@@ -1,7 +1,7 @@
 /************** BEHAVIOR *****************/
-$(document).on('click','.js-click_ShowDirectory',function(objEvent){
+$(document).on('click','.js-click_showDirectory',function(objEvent){
 	sessionStorage.setItem('currentDir','');
-	$("#DirectoryLayer").slideToggle();
+	$("#directoryLayer").slideToggle();
 	readDirectory();
 }); //end show directory
 
