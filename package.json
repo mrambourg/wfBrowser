@@ -2,10 +2,15 @@
   "name": "WebfileBrowser",
   "main": "app.js",
   "dependencies" : {
-	"express" : "~3.4.4", 			
-	"ejs" : "~0.8.5", 				
+	"express" : "latest", 
+	"multer":"latest",
+	"morgan": "latest",
+	"ejs" : "latest",
+	"cookie-parser" : "latest",	
+	"body-parser" : "latest",	
+	"express-session" : "latest",	
+	
 	"mongoose" : "~3.8.1", 
-	"formidable": "latest",
 	"passport" : "~0.1.17", 		
 	"passport-local" : "~0.1.6", 	
 	"passport-facebook" : "~1.0.2", 

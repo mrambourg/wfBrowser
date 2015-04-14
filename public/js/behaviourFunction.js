@@ -20,10 +20,12 @@ $(document).on('click','.js-click_Directory',function(objEvent){
 	readDirectory();
 });
 
+// show UpLoad laye
+$(document).on('click','.js-click_btshowUpLoad',function(objEvent){$("#upLoadLayer").slideToggle();});
 
 
-// UpLoad layer is hide by default 
-$(document).on('click','#uploadMe',function(objEvent){$("#upLoadLayer").slideToggle();});
+
+
 
 $(document).on('submit','#uploadForm',function(objEvent){
 	objEvent.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire

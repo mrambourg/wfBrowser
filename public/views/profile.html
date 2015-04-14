@@ -12,11 +12,18 @@
 	</div>
 	{{~}}
   </script>
-  <style></style>
+  <style>
+  
+  </style>
   
 
 </head>
-  <body>
+<body>
+
+<!-- ################ BODY ELEMENT ############ --> 
+<div id="upLoadLayer">
+	<form  action="/upload" class="dropzone" id="myDropzone"></form>
+</div>
 <div id="mainLayer" class="mainLayer">
 	<div id="showDirectory" class="imageButton showDirectory js-click_showDirectory"></div>
 </div>
@@ -24,18 +31,24 @@
 	<div id="iconLayer" class="iconLayer"> 
 		<div id="btgoHome" class="imageButton btgoHome  js-click_btgoHome"></div>
 		<div id="btchgStyle" class="imageButton btchgStyle js-click_btchgStyle"></div>
+		<div id="btshowUpLoad" class="imageButton btshowUpLoad js-click_btshowUpLoad"></div>		
 	</div>
 	<div id="pathLayer"  class="pathLayer">racine</div>
 	<div id="listFileLayer" class="listFileLayer"></div>
 </div>
 
+
+
+
+
 <!-- ################ JAVASCRIPT CODE ############ -->
-<!--
+<!--  
  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
 <script type="text/javascript" src="/js/headListCDN.js"></script>  
-   -->
+-->
 <script type="text/javascript" src="/lib/head.min.js"></script>
 <script type="text/javascript" src="/js/headList.js"></script>
+
 <script language="javascript">
 head.js(cssList);			
 head.js(jsList);
@@ -47,6 +60,15 @@ head.ready(function() {
 	// create repository if needed
 		var ID='<%= user._id %>';
 		createRepository(ID);
+		
+	Dropzone.options.myDropzone = {
+		url: '/upload',			//url de l'action
+		maxFilesize: 10, 		// taille maximum des fichiers en MB
+		headers: { 'id': ID } ,	//additionnal information
+		paramName: "file",
+		acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
+	};
+		
 
 	}); //end document ready jquery
 }); //end header ready
