@@ -69,11 +69,23 @@
 	}//end readDirectory
 
 	
+
+/***********  	FUNCTION  CREATEFILE	 *************/		
+	var addFile=function(){
+		console.log("add File");
+		mObj={
+			dir: sessionStorage.getItem("currentDir"),
+			id: sessionStorage.getItem("ID")
+			}
+		myAjax('/addFile',mObj, function(res){
+			readDirectory();
+			console.log("Success files");
+		});//end myAjax
+	}
 	
-	
-	
-	
-	
+	var addFolder=function(){
+		console.log("add Folder");
+	}
 	
 	
 	

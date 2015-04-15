@@ -21,7 +21,11 @@ $(document).on('click','.js-click_Directory',function(objEvent){
 });
 
 // show UpLoad laye
-$(document).on('click','.js-click_btshowUpLoad',function(objEvent){$("#upLoadLayer").slideToggle();});
+$(document).on('click','.js-click_btaddFolder',function(objEvent){addFolder();});
+
+$(document).on('click','.js-click_btaddFile',function(objEvent){addFile();});
+
+
 
 
 

@@ -8,6 +8,29 @@ var formidable = require('formidable'); //upload
 var lg=require('./log.js');
 var fInfo=require('./fileLibrary.js');
 
+
+/**************** CREATE NEW FILE ****************/
+var screateFile=function (id,dir,res){
+	// test if default file exist or not
+	fs.stat(dir, function(err, stat) {
+		if(err == null) {
+			//recursive call if file name existe
+			var newFilename=incFileNb(dir);
+			screateFile(id,newFilename,res);
+		} else if(err.code == 'ENOENT') {
+			// create new file
+			fs.writeFile(dir, "", function(){
+				console.log("ENOENT "+dir);
+				res.json({msg:"Repository created "+dir});
+			});
+		} else {
+			console.log('Some other error: ', err.code);
+		}//end if
+	});//end stats
+}
+
+
+
 /**************** READ DIRECTORY ****************/
 var sreadDirectory=function (req,res){
 	/*get request informations*/
@@ -121,6 +144,20 @@ function screateRepository(req, res){
 };//end post createRepository
 
 
+/**************** increment les fichiers ****************/
+var incFileNb=function(filename){
+	var found = filename.match(/\((\d)\)\.txt/);
+	if (found===null){
+		newfile=filename.replace(".txt","(1).txt");
+	} else {
+		newNumber=parseInt(found[1])+1;
+		newfile=filename.replace(/(\(\d\))\.txt/,"("+newNumber+").txt");
+	}
+	return newfile;
+}// end function
+
+
 //////////////// exports /////////////////////
 exports.sreadDirectory = sreadDirectory;
+exports.screateFile = screateFile;
 exports.screateRepository = screateRepository;

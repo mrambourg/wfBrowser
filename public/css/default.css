@@ -47,3 +47,5 @@ body {
 .btgoHome	{background-image: url('../img/home.png');}
 .btchgStyle	{background-image: url('../img/list.png');  }
 .btshowUpLoad{background-image: url('../img/upload.png');}
+.btaddFolder	{background-image: url('../img/folderAdd.png');}
+.btaddFile  	{background-image: url('../img/IconAdd.png');}

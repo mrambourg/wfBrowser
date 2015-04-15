@@ -12,14 +12,25 @@ var wb=require(fs.realpathSync(__dirname+'/../js/webBrowser.js'));
 module.exports = function(app, passport) {
 	app.post('/readDirectory',  	isLoggedIn,  	function(req, res){wb.sreadDirectory(req,res)});
 	app.post('/createRepository',  	isLoggedIn, 	function(req, res){wb.screateRepository(req,res)});
-	app.post('/upload',  			isLoggedIn, 	function(req, res){	
+	
+	app.post('/addFile',  	isLoggedIn, 	function(req, res){
+		var id=req.body.id;
+		var dir=req.body.dir;
+		var defaultFile="EmptyFile.txt";
+		var destination=path.normalize(__dirname+'/../../Repository/'+id+"/Data/"+dir+"/"+defaultFile);
+		wb.screateFile(id,destination,res);
+	});//end post
+
+		
+		
+	app.post('/upload',  	isLoggedIn, 	function(req, res){	
 		console.log("upload rq.headers "+JSON.stringify(req.headers));
 		console.log("upload rq.user "+JSON.stringify(req.user));
 		console.log("upload rq.body "+JSON.stringify(req.body));	
 		console.log("upload monId "+req.user._id);
-		
 		res.status(201).end()}
 	);//end post upload
+		
 };	//end module.exports
 	
 
