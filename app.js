@@ -5,11 +5,12 @@
 var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 16365;
+//var https = require('https');
 
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
-
+	
 var path = require('path');
 var logger = require('morgan');
 var multer  = require('multer');
@@ -29,6 +30,24 @@ require(__dirname +'/server/js/passport')(passport); // pass passport for config
 
 	app.use(bodyParser.json()); // get information from html forms
         app.use(bodyParser.urlencoded({ extended: true }));
+ 
+    //required for upload
+	app.use(multer({
+		dest: './Repository/upload',
+		rename: function (fieldname, filename) {
+			return filename
+		},
+		changeDest: function(dest, req, res) {
+			var monId=req.headers.mid;
+			console.log("changeDest rq.headers "+JSON.stringify(req.headers));
+			console.log("changeDest rq.user "+JSON.stringify(req.user));			
+			console.log("changeDest monId "+monId);
+			
+			//return dest + '/user1'; 
+			//return dest+"/"+monId;
+			return dest;			
+		}
+	}));
 
     // required for passport
 	app.use(session({ secret: '3aAqWWeaNjpX9wBI6gLrvObQ3MEaSfi3P3' })); // session secret
@@ -53,4 +72,6 @@ require(__dirname +'/server/routes/passport_routes.js')(app, passport); // load 
 require(__dirname +'/server/routes/wFB_routes.js')(app, passport);   // load our routes and pass in our app and fully configured passport	
 // launch ======================================================================
 app.listen(port);
+//https.createServer(options, app).listen(443);
+	
 console.log('The magic happens on port ' + port);

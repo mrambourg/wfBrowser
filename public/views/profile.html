@@ -12,10 +12,7 @@
 	</div>
 	{{~}}
   </script>
-  <style>
-  
-  </style>
-  
+
 
 </head>
 <body>
@@ -64,7 +61,7 @@ head.ready(function() {
 	Dropzone.options.myDropzone = {
 		url: '/upload',			//url de l'action
 		maxFilesize: 10, 		// taille maximum des fichiers en MB
-		headers: { 'id': ID } ,	//additionnal information
+		headers: { mid: "header value" } ,	//additionnal information
 		paramName: "file",
 		acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
 	};
