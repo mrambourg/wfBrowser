@@ -18,6 +18,17 @@ var sdelete=function(res,trg,cb){
 
 
 /**************** COPY, CUT AND PASTE ****************/
+/*var scutOrCopy=function(res,src,trg,type,cb){
+	console.log("scutOrCopy");
+	if (type==="cut"){
+		console.log("scutpaste");		
+		scutpaste(res,src,trg,function(res,msg){cb(res,msg);});
+	} else {
+		console.log("scopypaste");				
+		scopypaste(res,src,trg,function(res,msg){cb(res,msg);});
+	}
+};
+*/
 var scutOrCopy=function(res,src,trg,type,cb){
 	console.log("scutOrCopy");
 	if (type==="cut"){
@@ -28,6 +39,11 @@ var scutOrCopy=function(res,src,trg,type,cb){
 		scopypaste(res,src,trg,function(res,msg){cb(res,msg);});
 	}
 };
+
+
+
+
+
 
 var scutpaste=function(res,src,trg,cb){
 	fs.stat(trg, function(err, stat) {

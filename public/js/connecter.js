@@ -5,11 +5,27 @@ var readDirectory=function(dir){myAjax("/readDirectory",{directory: dir},draw_re
 var addFile=function(dir,defaultFileName){myAjax('/addFile',{dir: dir,defaultFileName: defaultFileName}, draw_addFile);}
 
 var moveFile=function(mObj){
+	console.log(mObj);
 	myAjax('/move',mObj, function(msg){
+		console.log(msg);
+		msgEcrase='Voulez vous ecraser le fichier ?';
+		if (msg.msg==='File Exist'){
+			if (confirmAlert(msgEcrase)){
+				mObj.force=1;
+				moveFile(mObj);
+			}
+		} else {
+			var currentDir=sessionStorage.getItem("currentDir");			
+			readDirectory(currentDir);	
+		}//end if
+	});//end myAjax
+}//moveFile
+
+var fileExist=function(mObj){
+	myAjax('/fileExist',mObj, function(msg){
 			console.log(msg);
 	});
 }
-
 
 var paste=function(mObj){
 	myAjax('/paste',mObj, function(msg){

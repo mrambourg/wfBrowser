@@ -13,6 +13,16 @@ var changeStyle=function(){
 	}
 }
 
+/**** boite de dialogue ***************/
+var confirmAlert=function(msg){
+	if (confirm(msg)) { // Clic sur OK
+		return 1;
+	} else {
+	       return 0;
+	}//end if confirm
+}//end function
+
+
 
 	
 	

@@ -13,16 +13,76 @@ module.exports = function(app, passport) {
 	app.post('/readDirectory',  	isLoggedIn,  	function(req, res){wb.sreadDirectory(req,res)});
 	app.post('/createRepository',  	isLoggedIn, 	function(req, res){wb.screateRepository(req,res)});
 	
+	app.post('/fileExist', isLoggedIn, function(req, res){
+		var homeDir=home(req.user._id);
+		var trg=path.normalize(homeDir+req.body.file);
+		console.log('file Exist '+trg);
+		fs.stat(trg, function(err, stat) {
+			if(err == null) {
+				//file exist
+				res.json({msg : 'err est null'});
+			} else if(err.code == 'ENOENT') {
+				//file doesn't exist
+				res.json({msg : 'err est ENOENT'});
+			} else {
+				//error file path 
+				res.json({msg : 'error exist'});				
+			}//if err
+		});//if stat
+	});//end post
+	
+	
 	app.post('/move', isLoggedIn, function(req, res){	
 		var homeDir=home(req.user._id);
 		var src=path.normalize(homeDir+req.body.src);
-		var trg=path.normalize(homeDir+req.body.trg+"/"+path.basename(src));
-		wb.scutpaste(res,src,trg,function(res,msg){
+		var trg=path.normalize(homeDir+req.body.dir+"/"+path.basename(src));
+		var type=req.body.type;
+		var force=req.body.force;
+		console.log("FFFFF "+force);
+		//test si fichier cible existe
+		fs.stat(trg, function(err, stat) {
+			if(err == null) {
+				//file exist
+				if (force==1){
+					console.log("ecrase le fichier");
+					//res.json({msg : 'ecrase Fichier existe'});
+					//on efface le fichier arrivé
+					wb.sdelete(res,trg,function(){
+						// on force la copie
+						wb.scutOrCopy(res,src,trg,'cut',function(res,msg){
+							console.log(msg);
+							res.json(msg);			
+						});	
+					})
+				} else {
+					console.log("Demande si on ecrase le fichier");
+					res.json({msg : 'File Exist'});
+				}
+			} else if(err.code == 'ENOENT') {
+				//file doesn't exist
+				wb.scutOrCopy(res,src,trg,'cut',function(res,msg){
+					console.log(msg);
+					res.json(msg);			
+				});
+			} else {
+				//error file path 
+				res.json({msg : 'error exist'});				
+			}//if err
+		});//if stat
+		
+		
+		
+		/*wb.scutpaste(res,src,trg,function(res,msg){
 			console.log(msg);
 			res.json(msg);			
 		});
+		*/
 	});//end post
-		
+	
+	
+	
+	
+	
 	app.post('/flushTrash',  	isLoggedIn, 	function(req, res){
 		var homeDir=home(req.user._id);
 		var trg=path.normalize(homeDir+"../Desktop/Trash/");

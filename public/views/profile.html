@@ -29,7 +29,7 @@
 	<div id="listFileLayer" class="listFileLayer context-menu-mainFolder"></div>
 </div>
 
-
+<div id="clickable">Click</div>
 <!-- ################ JAVASCRIPT CODE ############ -->
 <!--  
  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
@@ -63,7 +63,10 @@ $(function(){
 		acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
 	};
 	
-
+$(document).on('click','#clickable',function(objEvent){
+	console.log("lolo");
+	fileExist({file:'/public/FichierVide2.txt' });
+}); //end show directory
 	
 	
 	

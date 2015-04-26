@@ -122,7 +122,7 @@ var contextMenuMainFolderDispatcher=function(key,id){
 			var pasteElement=sessionStorage.getItem("pasteElement");
 			var pasteType=sessionStorage.getItem("pasteType");
 			var cDir=sessionStorage.getItem("currentDir");
-			var mObj={element:pasteElement ,type: pasteType, dir:cDir};
+			var mObj={element:pasteElement ,type: pasteType, force: false, dir:cDir};
 			paste(mObj);
 			break;
         
@@ -144,8 +144,11 @@ var dropElement=function(event, ui){
 	var droppableId = $(this).attr("id");
 	moveFile({
 		src: draggableId, 
-		trg: droppableId
+		dir: droppableId,
+		type: 'cut',
+		force: 0
 	});
+	
 }//end drop function
     
     //<li class="context-menu-item"><span>Foo bar</span></li><li class="context-menu-item context-menu-submenu"><span>Sub group 2</span><ul style="width: 121px; z-index: 2;" class="context-menu-list"><li class="context-menu-item"><span>alpha</span></li><li class="context-menu-item"><span>bravo</span></li><li class="context-menu-item"><span>charlie</span></li></ul></li><li class="context-menu-item"><span>delta</span></li>
