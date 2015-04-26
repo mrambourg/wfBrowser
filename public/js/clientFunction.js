@@ -12,3 +12,83 @@ var changeStyle=function(){
 		$('.icontext').removeClass('icontext').addClass('icontext32');	
 	}
 }
+
+
+	
+	
+var copyElm=function(element){
+	sessionStorage.setItem("pasteElement",element);
+	sessionStorage.setItem("pasteType","copy");
+	}	
+
+
+var cutElm=function(element){
+	sessionStorage.setItem("pasteElement",element);
+	sessionStorage.setItem("pasteType","cut");
+	}	
+	
+var pasteAll=function(){
+	var reqObj=[];	
+	var currentDir=sessionStorage.getItem("currentDir");
+	var cutString=sessionStorage.getItem("cutTab");
+	var copyString=sessionStorage.getItem("copyTab");
+	
+	// send all cut element
+	var cutTab=(cutString===null)?[]:cutString.split(',');
+	for (i=0;i<cutTab.length;i++){
+		var nObj={
+			source:  cutTab[i],
+			target: currentDir,
+			type: "cut"
+		}
+		reqObj.push(nObj);
+	}//end for
+	
+	//send all copy element
+	var copyTab=(copyString===null)?[]:copyString.split(',');
+	for (i=0;i<copyTab.length;i++){
+		var nObj={
+			source:  copyTab[i],
+			target: currentDir,
+			type: "copy"
+		}
+		reqObj.push(nObj);
+	}//end for
+	cpasteAll(reqObj)
+	console.log(JSON.stringify(reqObj));
+}//end paste Element
+
+
+/*** copy and cut element ***/
+var elementCopy=function(element,type){
+	//element can't be on cut and copy table in same time
+	//element can't be cut or copy twice
+	// CUT : remove element if in table
+	var cutString=sessionStorage.getItem("cutTab");
+	var cutTab=(cutString===null)?[]:cutString.split(',');
+	var indexCutTab=cutTab.indexOf(element);
+	if (indexCutTab>-1){
+		cutTab = _.reject(cutTab, function(elm){ return elm===element; });
+	}
+	// COPY : remove element if in table
+	var copyString=sessionStorage.getItem("copyTab");
+	var copyTab=(copyString===null)?[]:copyString.split(',');
+	var indexCopyTab=copyTab.indexOf(element);	
+	if (indexCopyTab>-1){
+		copyTab = _.reject(copyTab, function(elm){ return elm===element; });
+	}
+	
+	// Add element
+	if (type==="cut"){
+		cutTab.push(element);
+	} else {
+		copyTab.push(element);
+	}
+	
+	cutString=cutTab.join(',');
+	copyString=copyTab.join(',');
+	
+	//stock copy and cut list of element
+	sessionStorage.setItem("cutTab",cutString);
+	sessionStorage.setItem("copyTab",copyString);	
+}

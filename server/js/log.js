@@ -39,9 +39,9 @@ var log=function (msg){
 	// log format 
 		var tmpStr=when+";"+fcall+";"+msg+"\n";
 	// send info into console.log
-		console.log(tmpStr);
+		//~ console.log(tmpStr);
 	// send info into debugFile comment if you don't want to write it 
-		writeLog("debugFile",tmpStr);
+		//~ writeLog("debugFile",tmpStr);
 }
 
 

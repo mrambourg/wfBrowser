@@ -4,20 +4,12 @@
 <!-- views/profile.ejs -->
 <title>WebFileBrowser</title>
 
-<!-- ################ DEFAULT TEMPLATE ############ -->
-    <script id="default_readDirectory" type="text/x-dot-template">
-	{{~ it.farray :k}}
-	<div class='imageButton iconstyle js-click_{{=k.type}} icon{{=k.extension}}' id='{{=k.filename}}'>
-		<div class='icontext'>{{=k.basename}}</div>
-	</div>
-	{{~}}
-  </script>
-
-
+<!-- ################ TEMPLATE ############ -->
+    <script id="template" type="text/x-dot-template"></script>
 </head>
 <body>
 
-<!-- ################ BODY ELEMENT ############ --> 
+<!-- ################ BODY ELEMENT ############ -->
 <div id="upLoadLayer">
 	<form  action="/upload" class="dropzone" id="myDropzone"></form>
 </div>
@@ -34,11 +26,8 @@
 		<div id="btaddFile" class="imageButton btaddFile js-click_btaddFile"></div>	
 	</div>
 	<div id="pathLayer"  class="pathLayer">racine</div>
-	<div id="listFileLayer" class="listFileLayer"></div>
+	<div id="listFileLayer" class="listFileLayer context-menu-mainFolder"></div>
 </div>
-
-
-
 
 
 <!-- ################ JAVASCRIPT CODE ############ -->
@@ -53,14 +42,19 @@
 head.js(cssList);			
 head.js(jsList);
 head.ready(function() {
-	$(document).ready(function(){
+$(function(){
+	//$(document).ready(function(){
 	// hide layer at start time
 		$("#upLoadLayer").hide();
 		$("#directoryLayer").hide();
 	// create repository if needed
 		var ID='<%= user._id %>';
 		createRepository(ID);
-		
+		flushTrash(ID);
+	$(".iconstyle").draggable({stop: dragstop});
+	$('.iconDirectory').droppable({drop: dropElement});//end droppable
+	
+	
 	Dropzone.options.myDropzone = {
 		url: '/upload',			//url de l'action
 		maxFilesize: 10, 		// taille maximum des fichiers en MB
@@ -68,8 +62,12 @@ head.ready(function() {
 		paramName: "file",
 		acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
 	};
-		
+	
 
+	
+	
+	
+	
 	}); //end document ready jquery
 }); //end header ready
 

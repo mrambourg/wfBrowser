@@ -9,7 +9,7 @@
 	"cookie-parser" : "latest",	
 	"body-parser" : "latest",	
 	"express-session" : "latest",	
-	
+	"fs.extra":"latest",
 	"mongoose" : "~3.8.1", 
 	"passport" : "~0.1.17", 		
 	"passport-local" : "~0.1.6", 	
