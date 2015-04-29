@@ -8,132 +8,18 @@ var formidable = require('formidable'); //upload
 var lg=require('./log.js');
 var fInfo=require('./fileLibrary.js');
 
-/**************** COPY, CUT AND PASTE ****************/
-var sdelete=function(res,trg,cb){
-	fse.rmrf(trg, function (err) {
-		if (err) {console.error(err);}
-		cb(res,{msg:"Empty Trash"});	
-	});
-};
-
-
-/**************** COPY, CUT AND PASTE ****************/
-/*var scutOrCopy=function(res,src,trg,type,cb){
-	console.log("scutOrCopy");
-	if (type==="cut"){
-		console.log("scutpaste");		
-		scutpaste(res,src,trg,function(res,msg){cb(res,msg);});
-	} else {
-		console.log("scopypaste");				
-		scopypaste(res,src,trg,function(res,msg){cb(res,msg);});
-	}
-};
-*/
-var scutOrCopy=function(res,src,trg,type,cb){
-	console.log("scutOrCopy");
-	if (type==="cut"){
-		console.log("scutpaste");		
-		scutpaste(res,src,trg,function(res,msg){cb(res,msg);});
-	} else {
-		console.log("scopypaste");				
-		scopypaste(res,src,trg,function(res,msg){cb(res,msg);});
-	}
-};
-
-
-
-
-
-
-var scutpaste=function(res,src,trg,cb){
-	fs.stat(trg, function(err, stat) {
-		if(err == null) {
-			cb(res,{msg : "Error file exist"});	
-		} else {
-			fse.move(src,trg, function (err) {
-				if (err) {throw err;}
-				cb(res,{msg : "Moved files"});
-			});//end fse.move
-		}//end if
-	});//end fs.stat
-};//end scutpaste
-
-var scopypaste=function(res,src,trg,cb){
-	fs.stat(trg, function(err, stat) {
-		if(err == null) {
-			cb(res,{msg : "Error file exist"});	
-		} else {
-			fse.copy(src,trg, {replace: true},function (err) {
-				if (err) {throw err};
-				cb(res,{msg : "Copied files"});
-			});//end fse.copy
-		}//end if
-	});//end fs.stat
-};//end scutpaste
-
-/**************** ADD FILE ****************/
-var saddFile=function (file,res,cb){
-	// test if default file exist or not
-	fs.stat(file, function(err, stat) {
-		if(err == null) {
-			//recursive call if file name existe
-			var newFilename=incFileNb(file);
-			saddFile(newFilename,res,cb);
-		} else if(err.code == 'ENOENT') {
-			// create new file
-			fs.writeFile(file, "", function(){
-				console.log("ENOENT "+file);
-				return cb(res)
-				//res.json({msg:"Repository created ",dir: dir});
-			});
-		} else {
-			console.log('Some other error: ', err.code);
-		}//end if
-	});//end stats
-}
-
-var saddFolder=function (file,res,cb){
-	// test if default file exist or not
-	fs.stat(file, function(err, stat) {
-		if(err == null) {
-			//recursive call if file name existe
-			var newFilename=incFolderNb(file);
-			saddFolder(newFilename,res,cb);
-		} else if(err.code == 'ENOENT') {
-			// create new file
-			fs.mkdir(file, function(){
-				console.log("ENOENT "+file);
-				return cb(res,{msg:"new repository created"})
-				//res.json({msg:"Repository created ",dir: dir});
-			});
-		} else {
-			console.log('Some other error: ', err.code);
-		}//end if
-	});//end stats
-}
-
-
-
 /**************** READ DIRECTORY ****************/
-var sreadDirectory=function (req,res){
-	/*get request informations*/
-	console.log("sreadDirectory");
-	lg.logfunction(req);
-	lg.log("sTestFunction "+JSON.stringify(req.body));
-	/* filter data from entrance */
-	var mydir= fi_readDirectory(req);
-	var id=req.user._id;
-	//console.log("mydir " +mydir);
-	var homedir=path.normalize( __dirname + '../../../Repository/'+id+'/Data');
-		
+var ser_readDirectory=function (res,sObj,cb){
+	var currentdir=sObj.dir;
+	var homedir=sObj.homedir;
+	var currentdir=fi_readDirectory(homedir,currentdir);
+	
 	/* walk throw the directory */
-	fInfo.walk(mydir,1,function(err, results){
+	fInfo.walk(currentdir,1,function(err, results){
 		if (err){lg.logError(err)};
 		var mesRes=[];
-		//lg.log("nbre resultats 1 "+results.length);
 		// defined parent directory
-		var pDir=path.normalize( mydir + '/..' );
-		
+		var pDir=path.normalize( currentdir + '/..' );
 		//test parent directory
 		if(pDir.split("/").length>=homedir.split("/").length){
 			var mici={
@@ -146,31 +32,24 @@ var sreadDirectory=function (req,res){
 			};
 			mesRes.push(mici);
 		}
-					
 		if (results.length===0){
 			// si repertoire est vide, on retourne que le parent
 			mesRes=fo_readDirectory(mesRes,homedir);
-			res.json(mesRes);
+			cb(res,mesRes);
 		} else {
 			//si le repertoire n'est pas vide, on recupere les infos
 			fInfo.fileinfo(results,function(err,mesResultats){
 				mesRes=_.union(mesRes,mesResultats);
 				mesRes=fo_readDirectory(mesRes,homedir);
-				//console.log(JSON.stringify(mesRes));
-				res.json(mesRes);
+				cb(res,mesRes);				
 			});
 		} // fin de si repertoire vide - retourne les donnees	
 	}) ; //fin de walk
 };//end function
 
-
 /* filter in function of sreadDirectory */
-function fi_readDirectory(req){
-	/* if directory not defined */
-	var id=req.user._id;
-	var homedir=path.normalize( __dirname + '../../../Repository/'+id+"/Data");
-	var currentdir=path.normalize( homedir+"/"+req.body.directory);
-	
+function fi_readDirectory(homedir,currentdir){
+	//split path
 	var homeSplit=homedir.split("/");
 	var currentSplit=currentdir.split("/");
 		
@@ -201,12 +80,26 @@ var fo_readDirectory=function(mRes,homedir){
 }/* end function */
 
 
+
+/**************** DELETE ****************/
+var ser_delete=function(res,sObj,cb){
+	/*
+	sObj={trg: trg	//trash Directory};
+	*/
+	var trg=sObj.trg;
+	fse.rmrf(trg, function (err) {
+		if (err) {console.error(err);}
+		cb(res,{msg:"Empty Trash"});	
+	});
+};
+
+
 /**************** CREATE Repository ****************/
-function screateRepository(req, res){
-	//console.log("test "+JSON.stringify(req.body));
-	//console.log("user "+JSON.stringify(req.user));	
-	var id=req.user._id;
-	console.log("id "+id);
+var ser_createRepository=function (res,sObj,cb){
+	/*
+	mObj={};
+	*/
+	var id=sObj.id;
 	var dirM=path.normalize(__dirname+'/../../Repository/'+id);
 	var dirname=fs.realpath(dirM,function (err, resolvedPath) {
 		if (err) {
@@ -220,15 +113,162 @@ function screateRepository(req, res){
 						return console.error(err);
 					}
 					console.log("Repository created");
-					res.json({msg:"Repository created",id: id});
+					cb(res,{msg:"Repository created"+id});
 				});//end ncp
 			});//end fs.mkdir
 		} else {
 			console.log("Repository still exist");
-			res.send({msg:"Repository still exist"});			
+			cb(res,{msg:"Repository still exist"});			
 		}//end else
 	});//end fs.realpath
 };//end post createRepository
+
+
+/**************** ADD FILE ****************/
+var ser_addFile=function (res,sObj,cb){
+	// test if default file exist or not
+	/*
+	sObj={file: destination 	//user id}
+	*/
+	fs.stat(sObj.file, function(err, stat) {
+		if(err == null) {
+			//recursive call if file name existe
+			//var newFilename=incFileNb(file);
+			sObj.file=incFileNb(sObj.file);
+			ser_addFile(res,sObj,cb);
+		} else if(err.code == 'ENOENT') {
+			// create new file
+			fs.writeFile(sObj.file, "", function(){
+				cb(res,{msg:"ENOENT "+sObj.file})
+			});
+		} else {
+			cb(res,{msg:'Some other error: '+ err.code});
+		}//end if
+	});//end stats
+}
+
+/**************** ADD FOLDER ****************/
+var ser_addFolder=function (res,sObj,cb){
+	// test if default file exist or not
+	/*
+	sObj={file: destination 	//user id}
+	*/
+	fs.stat(sObj.file, function(err, stat) {
+		if(err == null) {
+			//recursive call if file name existe
+			sObj.file=incFolderNb(sObj.file);
+			ser_addFolder(res,sObj,cb);
+		} else if(err.code == 'ENOENT') {
+			// create new file
+			fs.mkdir(file, function(){
+				cb(res,{msg:"ENOENT "+sObj.file})
+			});
+		} else {
+			cb(res,{msg:'Some other error: '+ err.code});
+		}//end if
+	});//end stats
+}
+
+
+/**************** MOVE FILE ****************/
+var ser_moveFile=function (res,sObj,cb){
+	/*
+	var sObj={
+		src:	src,
+		trg:	trg,
+		type: type,
+		force: force
+	}	
+	*/
+	//test si fichier cible existe
+	fs.stat(sObj.trg, function(err, stat) {
+		if(err == null) {
+			//file exist
+			if (sObj.force==1){
+				console.log("ecrase le fichier");
+				//on efface le fichier arrivé
+				ser_delete(res,sObj,function(){
+					// on force la copie
+					ser_cutOrCopy(res,sObj,function(res,msg){
+						console.log(msg);
+						res.json(msg);			
+					});	
+				})
+			} else {
+				console.log("Demande si on ecrase le fichier");
+				res.json({msg : 'File Exist'});
+			}
+		} else if(err.code == 'ENOENT') {
+			//file doesn't exist
+			sObj.type='cut';
+			ser_cutOrCopy(res,sObj,function(res,msg){
+			//wb.scutOrCopy(res,src,trg,'cut',function(res,msg){
+				console.log(msg);
+				res.json(msg);			
+			});
+		} else {
+			//error file path 
+			res.json({msg : 'error exist'});				
+		}//if err
+	});//if stat
+}
+
+/**************** COPY, CUT AND PASTE ****************/
+var ser_cutOrCopy=function(res,sObj,cb){
+	console.log("scutOrCopy"+JSON.stringify(sObj));
+	/*
+	sObj={	file: file, 	//source file
+			trg: trg	//target file};
+	*/
+	if (type==="cut"){
+		console.log("scutpaste");		
+		ser_cutpaste(res,sObj,function(res,msg){cb(res,msg);});
+	} else {
+		console.log("scopypaste");				
+		ser_copypaste(res,sObj,function(res,msg){cb(res,msg);});
+	}
+};
+
+
+var ser_cutpaste=function(res,sObj,cb){
+	/*
+	sObj={	file: file, 	//source file
+			trg: trg	//target file};
+	*/
+	fs.stat(sObj.trg, function(err, stat) {
+		if(err == null) {
+			cb(res,{msg : "Error file exist"});	
+		} else {
+			fse.move(sObj.file,sObj.trg, function (err) {
+				if (err) {throw err;}
+				cb(res,{msg : "Moved files"});
+			});//end fse.move
+		}//end if
+	});//end fs.stat
+};//end scutpaste
+
+
+var ser_copypaste=function(res,sObj,cb){
+	/*
+	sObj={	src: src, 	//source file
+			trg: trg	//target file};
+	*/
+	var file=sObj.src;	
+	var trg=sObj.trg;
+
+	console.log("ser_copypaste"+JSON.stringify(sObj));
+	fs.stat(trg, function(err, stat) {
+	console.log("fstab");		
+		if(err == null) {
+			cb(res,{msg : "Error file exist"});	
+		} else {
+			fse.copy(file,trg, {replace: true},function (err) {
+				if (err) {throw err};
+				cb(res,{msg : "Copied files"});
+			});//end fse.copy
+		}//end if
+	});//end fs.stat
+};//end scutpaste
 
 
 /**************** increment les fichiers ****************/
@@ -257,11 +297,14 @@ var incFolderNb=function(filename){
 
 
 //////////////// exports /////////////////////
-exports.sreadDirectory = sreadDirectory;
-exports.scopypaste = scopypaste;
-exports.scutpaste = scutpaste;
-exports.scutOrCopy = scutOrCopy;
-exports.sdelete = sdelete;
-exports.saddFile = saddFile;
-exports.saddFolder = saddFolder;
-exports.screateRepository = screateRepository;
+exports.ser_readDirectory = ser_readDirectory;
+exports.ser_moveFile=ser_moveFile;
+exports.ser_cutOrCopy = ser_cutOrCopy;
+exports.ser_cutpaste = ser_cutpaste;
+exports.ser_copypaste = ser_copypaste;
+
+exports.ser_delete = ser_delete;
+exports.ser_createRepository = ser_createRepository;
+exports.ser_addFile=ser_addFile;
+exports.ser_addFolder=ser_addFolder;
+

@@ -5,6 +5,10 @@
 		console.log("Erreur "+JSON.stringify(err));
 	};
 	
+/***********	GET & SET LOCAL value	*************/	
+var setLocal=function(what,value){sessionStorage.setItem(what,value);}
+var getLocal=function(what){return sessionStorage.getItem(what);}
+	
 /***********	FUNCTION RENDER	*************/	
 	var render=function(templateName,targetLayer,mData){
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! test si tpl_readDirectory est defini

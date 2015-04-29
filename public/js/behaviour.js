@@ -1,40 +1,126 @@
-/************** BEHAVIOR *****************/
+
+
+/************** BROWSE DIRECTORY *****************/
 $(document).on('click','.js-click_showDirectory',function(objEvent){
-	sessionStorage.setItem('currentDir','');
 	$("#directoryLayer").slideToggle();
-	readDirectory('');
+	setLocal('currentDir','');
+	con_readDirectory('');
 }); //end show directory
 
 // behavior of ShowDirectory
 $(document).on('click','.js-click_btgoHome',function(objEvent){
-	sessionStorage.setItem('currentDir','');
-	readDirectory('');
+	setLocal('currentDir','');
+	con_readDirectory('');
 }); //end show directory
-
-// behavior of change style
-$(document).on('click','.js-click_btchgStyle',function(objEvent){changeStyle();}); //end show directory			
 
 // browse throw directory
 $(document).on('click','.js-click_Directory',function(objEvent){
-	//alert("repertoire "+this.id);
-	sessionStorage.setItem('currentDir',this.id);
-	readDirectory(this.id);
+	setLocal('currentDir',this.id);
+	con_readDirectory(this.id);
 });
 
+/************** ADD ELEMENT *****************/
 // add folder
 $(document).on('click','.js-click_btaddFolder',function(objEvent){
-	var cDir=sessionStorage.getItem("currentDir");	
-	addFolder(cDir,"RepertoireVide");
+	con_addFolder(getLocal("currentDir"),"RepertoireVide");
 	});
 
 //add file
 $(document).on('click','.js-click_btaddFile',function(objEvent){
-	var cDir=sessionStorage.getItem("currentDir");
-	console.log("cDir "+cDir);
-	addFile(cDir,"FichierVide.txt");
+	con_addFile(getLocal("currentDir"),"FichierVide.txt");
 	});
-	
 
+	
+/************** CHANGE STYLE  *****************/	
+$(document).on('click','.js-click_btchgStyle',function(objEvent){changeStyle();}); //end show directory			
+
+
+/************** CONTEXT FILE MENU **********************/
+$.contextMenu({
+        selector: '.context-menu-one', 
+        callback: function(key, options) {
+		contextMenuOneDispatcher(key,$(this).attr('id'));
+	},
+        items: {
+            "edit": {name: "Edit", icon: "edit"},
+            "cut": {name: "Cut", icon: "cut"},
+            "copy": {name: "Copy", icon: "copy"},
+            "rename": {name: "Rename", icon: "rename"},
+            "delete": {name: "Delete", icon: "delete"}
+
+        }
+    });
+
+// switch to function
+var contextMenuOneDispatcher=function(key,id){
+	switch (key) {
+		case "edit":
+			alert('1 edit : '+id);
+			break;
+		case "cut":
+			cutElement(id);          
+			break;
+          	case "copy":
+			copyElement(id);          
+			break;
+        	case "rename":
+			changeName('Changer le nom',id);
+			break;
+            	case "delete":
+			con_delete(id);
+			break;
+        	default:
+			alert('You have a strange mouse');
+	} 
+}//end function
+
+
+/************** CONTEXT MAIN FOLDER MENU **********************/
+$.contextMenu({
+        selector: '.context-menu-mainFolder', 
+        callback: function(key, options) {
+		contextMenuMainFolderDispatcher(key,$(this).attr('id'));
+        },
+        items: {
+            "createFile": {name: "create File", icon: "edit"},
+            "createFolder": {name: "create Folder", icon: "paste"},
+            "paste": {name: "Paste", icon: "paste"}
+        }
+    });
+    
+var contextMenuMainFolderDispatcher=function(key,id){
+	switch (key) {
+		case "createFile":
+			con_addFile(getLocal("currentDir"),"FichierVide.txt");
+			break;
+	
+		case "createFolder":
+			con_addFolder(getLocal("currentDir"),"RepertoireVide");
+			break;
+          
+		case "paste":
+			con_paste(getLocal("pasteElement"),getLocal("currentDir"),getLocal("pasteType"));
+			break;
+      
+		default:
+			alert('You have a strange mouse '+key);
+	} 
+    }//end function
+    
+
+/************** DRAG AND DROP **********************/
+var dragstop=function( event, ui ) {
+	con_readDirectory(getLocal('currentDir'));
+}
+    
+var dropElement=function(event, ui){
+	var draggableId = ui.draggable.attr("id");
+	var droppableId = $(this).attr("id");
+	con_moveFile(draggableId,droppableId,'cut',0);
+}//end drop function
+    
+    
+/************************************************************************/
 //upload
 $(document).on('submit','#uploadForm',function(objEvent){
 	objEvent.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
@@ -52,103 +138,3 @@ $(document).on('submit','#uploadForm',function(objEvent){
 	var $this = $(this);
 	*/
 });
-
-/************** CONTEXTMENU **********************/
-//menu pour les fichiers
-$.contextMenu({
-        selector: '.context-menu-one', 
-        callback: function(key, options) {
-		contextMenuOneDispatcher(key,$(this).attr('id'));
-	},
-        items: {
-            "edit": {name: "Edit", icon: "edit"},
-            "cut": {name: "Cut", icon: "cut"},
-            "copy": {name: "Copy", icon: "copy"},
-            "rename": {name: "Rename", icon: "rename"},
-            "delete": {name: "Delete", icon: "delete"}
-
-        }
-    });
-    
-var contextMenuOneDispatcher=function(key,id){
-	switch (key) {
-		case "edit":
-			alert('1 edit : '+id);
-			break;
-		case "cut":
-			cutElm(id);          
-			break;
-          	case "copy":
-			copyElm(id);          
-			break;
-        	case "rename":
-			alert('1 rename : '+id);
-			break;
-            	case "delete":
-			cdelete(id);
-			break;
-        	default:
-			alert('You have a strange mouse');
-	} 
-}//end function
-
-
-//menu pour le global
-$.contextMenu({
-        selector: '.context-menu-mainFolder', 
-        callback: function(key, options) {
-		contextMenuMainFolderDispatcher(key,$(this).attr('id'));
-        },
-        items: {
-            "createFile": {name: "create File", icon: "edit"},
-            "createFolder": {name: "create Folder", icon: "paste"},
-            "paste": {name: "Paste", icon: "paste"}
-        }
-    });
-    
-var contextMenuMainFolderDispatcher=function(key,id){
-	switch (key) {
-		case "createFile":
-			var cDir=sessionStorage.getItem("currentDir");
-			console.log("cDir "+cDir);
-			addFile(cDir,"FichierVide.txt");
-			break;
-	
-		case "createFolder":
-			alert('mainFolder createFolder : '+id);     
-			break;
-          
-		case "paste":
-			var pasteElement=sessionStorage.getItem("pasteElement");
-			var pasteType=sessionStorage.getItem("pasteType");
-			var cDir=sessionStorage.getItem("currentDir");
-			var mObj={element:pasteElement ,type: pasteType, force: false, dir:cDir};
-			paste(mObj);
-			break;
-        
-      
-		default:
-			alert('You have a strange mouse '+key);
-	} 
-    }//end function
-    
-
-// Drag and drop function
-var dragstop=function( event, ui ) {
-	var cDir=sessionStorage.getItem('currentDir');			
-	readDirectory(cDir);
-	}//end stop drag
-    
-var dropElement=function(event, ui){
-	var draggableId = ui.draggable.attr("id");
-	var droppableId = $(this).attr("id");
-	moveFile({
-		src: draggableId, 
-		dir: droppableId,
-		type: 'cut',
-		force: 0
-	});
-	
-}//end drop function
-    
-    //<li class="context-menu-item"><span>Foo bar</span></li><li class="context-menu-item context-menu-submenu"><span>Sub group 2</span><ul style="width: 121px; z-index: 2;" class="context-menu-list"><li class="context-menu-item"><span>alpha</span></li><li class="context-menu-item"><span>bravo</span></li><li class="context-menu-item"><span>charlie</span></li></ul></li><li class="context-menu-item"><span>delta</span></li>

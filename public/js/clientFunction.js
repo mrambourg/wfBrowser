@@ -13,6 +13,64 @@ var changeStyle=function(){
 	}
 }
 
+/************** COPY, CUT, PASTE *****************/
+var copyElement=function(element){
+	setLocal("pasteElement",element);
+	setLocal("pasteType","copy");
+	}	
+
+
+var cutElement=function(element){
+	setLocal("pasteElement",element);
+	setLocal("pasteType","cut");
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+/************************************************************************/
+/************** CHANGE NAME *****************/
+var changeName=function(msg,value){
+	var rep=dirname(value);
+	var nomFichier=basename(value) 
+	var newName = prompt(msg,nomFichier);
+	
+	var trg=rep+"/"+newName;
+	console.log(value+'\n'+trg+'\n'+newName);
+	var mObj={	src: value,
+				dir: trg,
+				type: 'cut', 
+				force: false
+			};
+}
+
+
+
+
+
+
+	/*var mObj={
+		dir: dir,
+		file:'',
+		trgDir:'',
+		trgFile:'',
+		type:'',
+		force:''
+	};
+	*/
+
+
+var createRepository=function(){
+	var mObj={};
+	con_readDirectory(mObj);
+}
+
+
 /**** boite de dialogue ***************/
 var confirmAlert=function(msg){
 	if (confirm(msg)) { // Clic sur OK
@@ -23,19 +81,9 @@ var confirmAlert=function(msg){
 }//end function
 
 
-
 	
 	
-var copyElm=function(element){
-	sessionStorage.setItem("pasteElement",element);
-	sessionStorage.setItem("pasteType","copy");
-	}	
-
-
-var cutElm=function(element){
-	sessionStorage.setItem("pasteElement",element);
-	sessionStorage.setItem("pasteType","cut");
-	}	
+	
 	
 var pasteAll=function(){
 	var reqObj=[];	
@@ -69,7 +117,7 @@ var pasteAll=function(){
 }//end paste Element
 
 
-/*** copy and cut element ***/
+/*** copy and cut element *
 var elementCopy=function(element,type){
 	//element can't be on cut and copy table in same time
 	//element can't be cut or copy twice
@@ -101,4 +149,4 @@ var elementCopy=function(element,type){
 	//stock copy and cut list of element
 	sessionStorage.setItem("cutTab",cutString);
 	sessionStorage.setItem("copyTab",copyString);	
-}
+}**/
