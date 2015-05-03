@@ -121,6 +121,7 @@ app.post('/addFolder',  isLoggedIn, 	function(req, res){
 
 	var homedir=home(id);
 	var destination=path.normalize(homedir+"/"+dir+"/"+filename);
+	console.log("destination "+destination);
 	
 	var sObj={
 		file: destination 	//user id

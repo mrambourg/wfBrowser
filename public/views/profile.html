@@ -41,29 +41,25 @@
 head.js(cssList);			
 head.js(jsList);
 head.ready(function() {
-$(function(){
-	//$(document).ready(function(){
-	// hide layer at start time
-		$("#upLoadLayer").hide();
-		$("#directoryLayer").hide();
-	// create repository if needed
-		con_createRepository();
-		con_flushTrash();
-	$(".iconstyle").draggable({stop: dragstop});
-	$('.iconDirectory').droppable({drop: dropElement});//end droppable
-	
-	
-	Dropzone.options.myDropzone = {
-		url: '/upload',			//url de l'action
-		maxFilesize: 10, 		// taille maximum des fichiers en MB
-		headers: { mid: "header value" } ,	//additionnal information
-		paramName: "file",
-		acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
-	};
-	
-	
-	
-	
+	$(function(){
+		//$(document).ready(function(){
+		// hide layer at start time
+			$("#upLoadLayer").hide();
+			$("#directoryLayer").hide();
+		// create repository if needed
+			con_createRepository();
+			con_flushTrash();
+		
+		$(".iconstyle").draggable({stop: dragstop});
+		$('.iconDirectory').droppable({drop: dropElement});//end droppable
+		
+		Dropzone.options.myDropzone = {
+			url: '/upload',			//url de l'action
+			maxFilesize: 10, 		// taille maximum des fichiers en MB
+			headers: { mid: "header value" } ,	//additionnal information
+			paramName: "file",
+			acceptedFiles: 'image/*,application/zip,.js'//liste des extensions acceptés
+		};
 	
 	}); //end document ready jquery
 }); //end header ready

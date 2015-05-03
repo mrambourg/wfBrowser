@@ -18,13 +18,7 @@ var draw_currentDir=function(res){
 	con_readDirectory(getLocal('currentDir'));
 }
 	
-/*var draw_pasteFile=function(res){
-	setLocal('copyTab','');
-	setLocal('cutTab','');
-	con_readDirectory(getLocal('currentDir'));
-}
-*/	
-	
+
 var draw_pathLayer=function(mpath){
 	$('#pathLayer').text(mpath);
 	var myPath=splitPath(mpath);

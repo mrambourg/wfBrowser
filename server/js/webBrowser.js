@@ -160,7 +160,7 @@ var ser_addFolder=function (res,sObj,cb){
 			ser_addFolder(res,sObj,cb);
 		} else if(err.code == 'ENOENT') {
 			// create new file
-			fs.mkdir(file, function(){
+			fs.mkdir(sObj.file, function(){
 				cb(res,{msg:"ENOENT "+sObj.file})
 			});
 		} else {

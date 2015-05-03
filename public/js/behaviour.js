@@ -1,5 +1,3 @@
-
-
 /************** BROWSE DIRECTORY *****************/
 $(document).on('click','.js-click_showDirectory',function(objEvent){
 	$("#directoryLayer").slideToggle();
