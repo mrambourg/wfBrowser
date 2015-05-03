@@ -38,16 +38,16 @@ app.post('/delete',  	isLoggedIn, 	function(req, res){
 	var mObj=req.body;
 		
 	var homedir=home(id);
-	var file=path.normalize(homedir+mObj.filename);
-	var trg=path.normalize(homedir+"../Desktop/Trash/"+path.basename(file));
+	var src=path.normalize(homedir+mObj.filename);
+	var trg=path.normalize(homedir+"../Desktop/Trash/"+path.basename(src));
 		
 	var sObj={
-		file: file, 	//source file
-		trg: trg	//target file
-	};
-	console.log("sObj "+JSON.stringify(sObj));
-	//move to trash
-	wb.ser_cutpaste(res,sObj,returnJSON);
+		src: src, 		//source file
+		trg: trg,		//target file
+		type: "cut",
+		force: 1
+	}				
+	wb.ser_moveFile(res,sObj,returnJSON);
 });//end post
 
 
@@ -147,8 +147,7 @@ app.post('/loadTemplate',  isLoggedIn, 	function(req, res){
 });//end post
 
 
-
-/************************************************************************/
+/************** MOVE ************/	
 app.post('/move', isLoggedIn, function(req, res){	
 	var homedir=home(req.user._id);
 	/*
@@ -178,64 +177,38 @@ app.post('/move', isLoggedIn, function(req, res){
 	
 
 
-
-
-
-
-
-
-
-	app.post('/fileExist', isLoggedIn, function(req, res){
-		var homeDir=home(req.user._id);
-		var trg=path.normalize(homeDir+req.body.file);
-		console.log('file Exist '+trg);
-		fs.stat(trg, function(err, stat) {
-			if(err == null) {
-				//file exist
-				res.json({msg : 'err est null'});
-			} else if(err.code == 'ENOENT') {
-				//file doesn't exist
-				res.json({msg : 'err est ENOENT'});
-			} else {
-				//error file path 
-				res.json({msg : 'error exist'});				
-			}//if err
-		});//if stat
-	});//end post
+/************************************************************************/
+app.post('/fileExist', isLoggedIn, function(req, res){
+	var homeDir=home(req.user._id);
+	var trg=path.normalize(homeDir+req.body.file);
+	console.log('file Exist '+trg);
+	fs.stat(trg, function(err, stat) {
+		if(err == null) {
+			//file exist
+			res.json({msg : 'err est null'});
+		} else if(err.code == 'ENOENT') {
+			//file doesn't exist
+			res.json({msg : 'err est ENOENT'});
+		} else {
+			//error file path 
+			res.json({msg : 'error exist'});				
+		}//if err
+	});//if stat
+});//end post
 	
 
-	app.post('/paste',  isLoggedIn, function(req, res){
-		var id=req.user._id;	
-		var mdata=req.body;
-		var filename=req.body.filename;
-		var type=req.body.type;
-		var dir=req.body.dir;
-		var homeDir=home(id);
-		var src=path.normalize(homeDir+filename);
-		var trg=path.normalize(homeDir+"/"+dir+"/"+path.basename(filename));
-		wb.scutOrCopy(res,src,trg,type,function(res,msg){
-			console.log(msg);
-			res.json(msg);			
-		});
-	});//end post
-	
-
-	
-
-		
-	app.post('/upload',  	isLoggedIn, 	function(req, res){	
-		console.log("upload rq.headers "+JSON.stringify(req.headers));
-		console.log("upload rq.user "+JSON.stringify(req.user));
-		console.log("upload rq.body "+JSON.stringify(req.body));	
-		console.log("upload monId "+req.user._id);
-		res.status(201).end()}
-	);//end post upload
+app.post('/upload',  	isLoggedIn, 	function(req, res){	
+	console.log("upload rq.headers "+JSON.stringify(req.headers));
+	console.log("upload rq.user "+JSON.stringify(req.user));
+	console.log("upload rq.body "+JSON.stringify(req.body));	
+	console.log("upload monId "+req.user._id);
+	res.status(201).end()}
+);//end post upload
 };	//end module.exports
 
 
 
 /******************** FUNCTIONS ***********************************************/
-
 // return result
 function returnJSON(res,data){
 	console.log("returnJSON "+JSON.stringify(data));

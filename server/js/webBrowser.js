@@ -220,6 +220,7 @@ var ser_cutOrCopy=function(res,sObj,cb){
 	sObj={	file: file, 	//source file
 			trg: trg	//target file};
 	*/
+	var type=sObj.type;
 	if (type==="cut"){
 		console.log("scutpaste");		
 		ser_cutpaste(res,sObj,function(res,msg){cb(res,msg);});
@@ -232,14 +233,14 @@ var ser_cutOrCopy=function(res,sObj,cb){
 
 var ser_cutpaste=function(res,sObj,cb){
 	/*
-	sObj={	file: file, 	//source file
+	sObj={	src: src, 	//source file
 			trg: trg	//target file};
 	*/
 	fs.stat(sObj.trg, function(err, stat) {
 		if(err == null) {
 			cb(res,{msg : "Error file exist"});	
 		} else {
-			fse.move(sObj.file,sObj.trg, function (err) {
+			fse.move(sObj.src,sObj.trg, function (err) {
 				if (err) {throw err;}
 				cb(res,{msg : "Moved files"});
 			});//end fse.move
@@ -263,7 +264,10 @@ var ser_copypaste=function(res,sObj,cb){
 			cb(res,{msg : "Error file exist"});	
 		} else {
 			fse.copy(file,trg, {replace: true},function (err) {
-				if (err) {throw err};
+				if (err) {
+					console.log(err);
+					throw err
+					};
 				cb(res,{msg : "Copied files"});
 			});//end fse.copy
 		}//end if

@@ -57,8 +57,12 @@ var con_paste=function(filename,dir,type){
 			type: 	type, 	//cut or copy
 			force: 	0		//overwrite or not
 			};
-	myAjax('/paste',mObj,draw_pasteFile);
+	
+	setLocal('copyTab','');
+	setLocal('cutTab','');
+	con_moveFile(filename,dir,type,0);
 }
+
 
 /************** MOVE ELEMENT *****************/
 var con_moveFile=function(filename,dir,type,force){
@@ -66,13 +70,14 @@ var con_moveFile=function(filename,dir,type,force){
 		filename:	filename ,	//filename to paste
 		dir:		dir,		//where
 		type: 	type, 	//cut or copy
-		force: 	0		//overwrite or not
+		force: 	force	//overwrite or not
 	}
+	
 	myAjax('/move',mObj, function(msg){
 		var msgEcrase='Voulez vous ecraser le fichier ?';
 		if (msg.msg==='File Exist'){
 			if (confirmAlert(msgEcrase)){
-				con_moveFile(mObj.src,mObj.dir,mObj.type,1);
+				con_moveFile(mObj.filename,mObj.dir,mObj.type,1);
 			}
 		} else {
 			draw_currentDir({});
